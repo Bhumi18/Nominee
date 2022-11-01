@@ -78,6 +78,8 @@ def getTransactionDetails():
         if int(no_days) <180 and int(no_res_days)<30 and final_resposne==False:
             if response_date=="":
                 print("call contract function")
+                setDate(data[i])
+                print("called")
             message = "Please tell me you are doing fine"
             sendMail(message,email)
         elif int(no_days)<180 and int(no_res_days)>30 and final_resposne==False:
@@ -93,6 +95,32 @@ def getTransactionDetails():
             print("Active Account!")
         else:
             print("responded!")
+
+def setDate(owner):
+    chain_id = 80001
+    my_address = os.environ.get("ADDRESS")
+    private_key = os.environ.get("KEY")
+    nonce = web3.eth.getTransactionCount(my_address)
+    nonce = web3.eth.getTransactionCount(my_address)
+    today_date = str(date.today())
+    store_transaction = contract.functions.setResponseDate(owner,today_date).buildTransaction(
+        {
+            "chainId": chain_id,
+            "from": my_address,
+            "nonce": nonce,
+            "gasPrice": web3.eth.gas_price,
+        }
+    )
+
+    signed_store_txn = web3.eth.account.sign_transaction(
+        store_transaction, private_key=private_key
+    )
+    send_store_tx = web3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
+    print(send_store_tx)
+
+    tx_receipt = web3.eth.wait_for_transaction_receipt(send_store_tx)
+    print(tx_receipt)
+    return
 
 # Function to send mail
 def sendMail(message,email):
