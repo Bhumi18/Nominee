@@ -6,6 +6,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask.globals import request, session
 from dotenv import load_dotenv
+from web3 import Web3
+import json
 
 app = Flask(__name__)
 
@@ -17,6 +19,13 @@ load_dotenv()
 def hello_world():
     return "hi"
 
+# Contract setup
+alchemy_url = "https://polygon-mumbai.g.alchemy.com/v2/ALbcNieoFrIRYYNDrcr4dAASXUCZbm-i"
+web3 = Web3(Web3.HTTPProvider(alchemy_url))
+nominee_factory = "0x336041F8FdB4E2b148BE1C5C52344D4cC442f65a"
+file = open("Nominee.json")
+abi = json.load(file)
+contract = web3.eth.contract(address=nominee_factory, abi=abi)
 
 # ---------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------
@@ -62,6 +71,31 @@ def send_verification_mail():
         response_body = {"status": 200, "data": "sent"}
         return response_body
 
+    except Exception as e:
+        print(e)
+        return None
+    
+# ---------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------
+# check state of user
+@app.route("/checkAddress", methods=["POST"])
+def checkAddress():
+    try:
+        address = request.json["address"]
+        # contract function to get all owner's address
+        address_array = contract.functions.getOwners().call()
+        for i in range(len(address_array)):
+            # check if it is available and verification
+            if address == address_array[i]:
+                isVerified = contract.functions.checkVerification(address).call()
+                if(isVerified):
+                    response_body = {"status": 2, "message": "registered and verified"} 
+                else:
+                    response_body = {"status": 1, "message": "registered but not verified"}      
+            else:
+                response_body = {"status": 0, "message": " not registered"}                   
+        return response_body
     except Exception as e:
         print(e)
         return None
