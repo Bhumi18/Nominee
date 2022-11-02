@@ -127,7 +127,7 @@ def verify():
         )
         send_store_tx = web3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
         tx_receipt = web3.eth.wait_for_transaction_receipt(send_store_tx)
-        print(tx_receipt)
+        # print(tx_receipt)
         print("done")
         response_body = {"status": 200, "message": "verified"}                   
         return response_body
