@@ -22,29 +22,26 @@ contract = web3.eth.contract(address=nominee_factory, abi=abi)
 
 # Function to get transaction details from api, get contract details
 def getTransactionDetails():
+    # get list of all owner's address
     data = contract.functions.getOwners().call()
-    # print(data)
+    # loop over the list
     for i in range(len(data)):
-        print(data[i])
+        print("owner number : "+str(i))
+        # check for inactivity of an account using moralis api
         url = "https://deep-index.moralis.io/api/v2/"+data[i]+"?chain=mumbai"
-        # print(url)
         headers = {"accept": "application/json", "X-API-Key": "test"}
         response = requests.get(url, headers=headers)
         json_data = response.json()
         last_transaction = json_data["result"][0]["block_timestamp"]
-        # print(last_transaction)
         trans_month = last_transaction[5:7]
         trans_year = last_transaction[:4]
         trans_date = last_transaction[8:10]
         temp = date(int(trans_year), int(trans_month), int(trans_date))
         today = date.today()
-        # print(today)
         difference = str(today - temp)
-        # print(difference)
         no_days = difference.split(" ")[0]    
         if (no_days == "0:00:00") :
             no_days= 0
-        # print(no_days)
 
         #get email of owner from contract
         data1 = contract.functions.getOwnerDetails(data[i]).call()
