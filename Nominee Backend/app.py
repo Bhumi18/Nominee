@@ -99,3 +99,38 @@ def checkAddress():
     except Exception as e:
         print(e)
         return None
+
+# ---------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------
+# verify owner's email address
+@app.route("/verify", methods=["POST"])
+def verify():
+    try:
+        address = request.json["address"]
+        # data to sign the transaction
+        chain_id = 80001
+        my_address = os.environ.get("ADDRESS")
+        private_key = os.environ.get("KEY")
+        nonce = web3.eth.getTransactionCount(my_address)
+        # contract function to verify the owner's email address
+        store_transaction = contract.functions.verifyOwner(address).buildTransaction(
+            {
+                "chainId": chain_id,
+                "from": my_address,
+                "nonce": nonce,
+                "gasPrice": web3.eth.gas_price,
+            }
+        )
+        signed_store_txn = web3.eth.account.sign_transaction(
+            store_transaction, private_key=private_key
+        )
+        send_store_tx = web3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
+        tx_receipt = web3.eth.wait_for_transaction_receipt(send_store_tx)
+        print(tx_receipt)
+        print("done")
+        response_body = {"status": 200, "message": "verified"}                   
+        return response_body
+    except Exception as e:
+        print(e)
+        return None
