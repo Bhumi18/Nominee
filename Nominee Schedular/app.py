@@ -104,6 +104,7 @@ def getTransactionDetails():
             else:
                 print("not alive")
 
+# Function to set response date in contract
 def setDate(owner):    
     today_date = str(date.today())
     store_transaction = contract.functions.setResponseDate(owner,today_date).buildTransaction(
@@ -125,8 +126,8 @@ def setDate(owner):
     print(tx_receipt)
     return
 
+# Function to set owner is not alive in contract
 def setNotAlive(owner):    
-    today_date = str(date.today())
     store_transaction = contract.functions.setOwnerNotAlive(owner).buildTransaction(
         {
             "chainId": chain_id,
@@ -164,12 +165,7 @@ def sendMail(message,email):
 
 
 # getTransactionDetails()
-
-
-# def sayHi():
-#     print("yesssssssssssssss")
-
-
+# call function every day
 schedule.every(2).minutes.do(getTransactionDetails)
 
 while True:
