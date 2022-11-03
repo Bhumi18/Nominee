@@ -157,6 +157,19 @@
 				"internalType": "address",
 				"name": "_owner",
 				"type": "address"
+			}
+		],
+		"name": "setOwnerNotAlive",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
 			},
 			{
 				"internalType": "bool",
@@ -191,6 +204,19 @@
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "verifyOwner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "",
 				"type": "address"
 			}
@@ -211,6 +237,35 @@
 				"internalType": "string",
 				"name": "image_cid",
 				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "isEmailVerified",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isAlive",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "checkVerification",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -280,6 +335,25 @@
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "getOwnerAlive",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "owner_address",
 				"type": "address"
 			}
@@ -302,6 +376,16 @@
 						"internalType": "string",
 						"name": "image_cid",
 						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isEmailVerified",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isAlive",
+						"type": "bool"
 					}
 				],
 				"internalType": "struct Main.Owner",
