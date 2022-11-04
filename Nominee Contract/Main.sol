@@ -5,12 +5,16 @@ pragma solidity ^0.8.0;
 /// @title Owner & Nominee Functionality
 /// @author Bhumi Sadariya
 
-contract Main {
-    // all owners' arrays and mapping to check if the owner is already added or not.
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
+
+contract Main is Ownable {
+    constructor() Ownable() {}
+
+    // all owners' arrays and mappings to check if the owner is already added or not.
     address[] public owners;
     mapping(address => bool) public isOwnerAdded;
 
-    // owner structure and address mapping with owner structure
+    // Owner structure and address mapping with owner structure
     struct Owner {
         string owner_name;
         string owner_email;
@@ -20,17 +24,17 @@ contract Main {
     }
     mapping(address => Owner) public addressToOwner;
 
-    //Nominee Structure, mapping of owner to nominee's id array, and mapping of id to nominee structure
+    //Nominee structure, mapping of owner to nominee's id array, and mapping of id to nominee structure
     struct Nominee {
-        uint256 id;
         string nominee_name;
         string nominee_email;
         address nominee_address;
+        bool isClaimed;
     }
-    mapping(address => uint256[]) public ownerToNominees;
-    mapping(uint256 => Nominee) public idToNominee;
-    uint256 nominee_id = 1;
+    mapping(address => address[]) public ownerToNominees;
+    mapping(address => Nominee) public addressToNominee;
 
+    //Asset Structure: mapping of the nominee's address to the array of assets' structures
     struct Assets {
         address token_address;
         string token_name;
@@ -41,14 +45,14 @@ contract Main {
     }
     mapping(address => Assets[]) public nomineeToAssets;
 
-    //struct to store owner's response
+    //struct to the store owner's response
     struct Response {
         string date;
         bool isResponsed;
     }
     mapping(address => Response) public ownerToResponse;
 
-    ///@param name is the owner's name and email is the owner's email
+    ///@param name is the owner's name, and email is the owner's email.
     function addOwnerDetails(
         string memory name,
         string memory email,
@@ -61,7 +65,8 @@ contract Main {
         }
     }
 
-    function verifyOwner(address _owner) public {
+    ///@param _owner is the owner's address.
+    function verifyOwner(address _owner) public onlyOwner {
         addressToOwner[_owner].isEmailVerified = true;
     }
 
@@ -72,46 +77,56 @@ contract Main {
         string memory email,
         address nominee_address
     ) public {
-        idToNominee[nominee_id] = Nominee(
-            nominee_id,
+        addressToNominee[nominee_address] = Nominee(
             name,
             email,
-            nominee_address
+            nominee_address,
+            false
         );
-        ownerToNominees[msg.sender].push(nominee_id);
-        nominee_id++;
+        ownerToNominees[msg.sender].push(nominee_address);
     }
 
-    ///@param id is the nominee's id, name is the nominee's name, email is the nominee's email, and nominee_address
+    ///@param name is the nominee's name, email is the nominee's email, and nominee_address
     ///is the nominee's address
     function editNomineeDetails(
-        uint256 id,
+        address _owner,
+        address _oldNomineeAddress,
         string memory name,
         string memory email,
         address nominee_address
     ) public {
-        idToNominee[id].nominee_name = name;
-        idToNominee[id].nominee_email = email;
-        idToNominee[id].nominee_address = nominee_address;
+        if (_oldNomineeAddress == nominee_address) {
+            addressToNominee[_oldNomineeAddress].nominee_name = name;
+            addressToNominee[_oldNomineeAddress].nominee_email = email;
+        } else {
+            addressToNominee[nominee_address].nominee_name = name;
+            addressToNominee[nominee_address].nominee_email = email;
+            addressToNominee[nominee_address].nominee_address = nominee_address;
+            for (uint256 i = 0; i < ownerToNominees[_owner].length; i++) {
+                if (ownerToNominees[_owner][i] == _oldNomineeAddress) {
+                    ownerToNominees[_owner][i] = nominee_address;
+                }
+            }
+        }
     }
 
     /// @return array of nominees's id
     function getNominees(address _owner)
         public
         view
-        returns (uint256[] memory)
+        returns (address[] memory)
     {
         return ownerToNominees[_owner];
     }
 
-    /// @param id is the nominee id
+    /// @param _nominee is the nominee address
     /// @return nominee structure
-    function getNomineeDetails(uint256 id)
+    function getNomineeDetails(address _nominee)
         public
         view
         returns (Nominee memory)
     {
-        return idToNominee[id];
+        return addressToNominee[_nominee];
     }
 
     /// @param owner_address is the owner's address
@@ -151,6 +166,10 @@ contract Main {
         }
     }
 
+    /// @param old_nominee is the address of the nominee who was holding an asset.,
+    // new_nominee is the address of the nominee to whom the owner wants to assign,
+    // _token_address is the token address; _approved Balance is the amount of tokens approved.
+    //_nftId is the token id of nft.
     function ChangeAssetsToNomiee(
         address old_nominee,
         address new_nominee,
@@ -189,18 +208,25 @@ contract Main {
         return owners;
     }
 
-    function setResponseDate(address _owner, string memory _date) public {
+    /// @param _owner is the owner's address, _date is the date on which we sent the first mail to the nominee.
+    function setResponseDate(address _owner, string memory _date)
+        public
+        onlyOwner
+    {
         ownerToResponse[_owner].date = _date;
     }
 
+    /// @param _owner is the owner's address, _response is whether the owner has replied to the email or not.
     function setResponse(address _owner, bool _response) public {
         ownerToResponse[_owner].isResponsed = _response;
     }
 
-    function setOwnerNotAlive(address _owner) public {
+    /// @param _owner is the owner's address
+    function setOwnerNotAlive(address _owner) public onlyOwner {
         addressToOwner[_owner].isAlive = false;
     }
 
+    /// @return string of the owner's date when we first send mail to the owner
     function getResponseDate(address _owner)
         public
         view
@@ -209,17 +235,23 @@ contract Main {
         return ownerToResponse[_owner].date;
     }
 
+    /// @return bool of owner's response
     function getResponse(address _owner) public view returns (bool) {
         return ownerToResponse[_owner].isResponsed;
     }
 
+    /// @return boolean showing whether the owner is alive or not
     function getOwnerAlive(address _owner) public view returns (bool) {
         return addressToOwner[_owner].isAlive;
     }
 
+    /// @return bool of email is verified or not
     function checkVerification(address _owner) public view returns (bool) {
         return addressToOwner[_owner].isEmailVerified;
     }
 
-    function claim() public {}
+    /// @param _nominee is the nominee's address
+    function claim(address _nominee) public {
+        addressToNominee[_nominee].isClaimed = true;
+    }
 }
