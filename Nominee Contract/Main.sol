@@ -52,6 +52,11 @@ contract Main is Ownable {
     }
     mapping(address => Response) public ownerToResponse;
 
+    //mapping to store whether tokens are nominated or not
+    mapping(address => mapping(address => address))
+        public ownerTokenIdToAddress;
+    mapping(address => mapping(address => bool)) public isNominated;
+
     ///@param name is the owner's name, and email is the owner's email.
     function addOwnerDetails(
         string memory name,
@@ -142,6 +147,7 @@ contract Main is Ownable {
     /// @param nominee_address is the nominee address, _token_address is the token address, _approvedBalance is the amount of token approved
     //_nftId is the token id of nft
     function assignAssetsToNominee(
+        address _owner,
         address nominee_address,
         string memory _token_name,
         address _token_address,
@@ -159,10 +165,14 @@ contract Main is Ownable {
                     true
                 )
             );
+            ownerTokenIdToAddress[_owner][_token_address] = nominee_address;
+            isNominated[_owner][_token_address] = true;
         } else {
             nomineeToAssets[nominee_address].push(
                 Assets(_token_address, "", 0, _nftId, false, true)
             );
+            ownerTokenIdToAddress[_owner][_token_address] = nominee_address;
+            isNominated[_owner][_token_address] = true;
         }
     }
 
@@ -171,6 +181,7 @@ contract Main is Ownable {
     // _token_address is the token address; _approved Balance is the amount of tokens approved.
     //_nftId is the token id of nft.
     function ChangeAssetsToNomiee(
+        address _owner,
         address old_nominee,
         address new_nominee,
         string memory _token_name,
@@ -196,11 +207,31 @@ contract Main is Ownable {
                     true
                 )
             );
+            ownerTokenIdToAddress[_owner][_token_address] = new_nominee;
         } else {
             nomineeToAssets[new_nominee].push(
                 Assets(_token_address, "", 0, _nftId, false, true)
             );
+            ownerTokenIdToAddress[_owner][_token_address] = new_nominee;
         }
+    }
+
+    /// @return nominee address
+    function getAssetsToNominee(address _owner, address _token_address)
+        public
+        view
+        returns (address)
+    {
+        return ownerTokenIdToAddress[_owner][_token_address];
+    }
+
+    /// @return nominee address
+    function checkIsNominated(address _owner, address _token_address)
+        public
+        view
+        returns (bool)
+    {
+        return isNominated[_owner][_token_address];
     }
 
     /// @return an array of owner's address
