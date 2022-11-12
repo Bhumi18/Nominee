@@ -1,0 +1,43 @@
+.token-main {
+  margin-top: 3rem;
+  width: 100%;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  -webkit-box-shadow: 0px 10px 25px 10px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 10px 25px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 25px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Josefin Sans";
+
+  .token-table {
+    width: 100%;
+    // border: 1px solid black;
+
+    .token-parent {
+      table {
+        width: 100%;
+
+        th,
+        td {
+          padding: 20px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+        tr {
+          td {
+            button {
+              padding: 1rem 1rem;
+              background-color: black;
+              color: white;
+              border-radius: 99999px;
+            }
+          }
+          td.token-symbol {
+            font-family: "JosefinSans";
+            font-weight: 700;
+            color: #5a88e1;
+          }
+        }
+      }
+    }
+  }
+}

@@ -15,9 +15,13 @@ div.home-navbar {
   // margin-top: 30px;
   margin-top: 2rem;
   max-width: 100%;
-  padding: 0px 30px 30px 50px;
+  padding: 0px 80px 30px 80px;
   position: absolute;
   z-index: 109;
+
+  img.logo-image {
+    height: 64px;
+  }
 
   ul {
     display: flex;
@@ -27,12 +31,20 @@ div.home-navbar {
     list-style-type: none;
     margin: 0;
     padding: 0;
+
+    a {
+      text-decoration: none;
+    }
   }
+
   li {
     margin: 0 5px;
     padding: 30px 10px 10px 10px;
     cursor: pointer;
     font-size: 1rem;
+    font-family: "Josefin Sans";
+    font-weight: 400;
+
     &:hover {
       background-color: #000;
       color: #ffffff;
@@ -43,10 +55,10 @@ div.home-navbar {
     background-color: #000;
     color: #ffffff;
   }
-  button {
-    height: 50px;
-    padding: 10px 20px;
-  }
+
+  // button {
+  //   height: 50px;
+  // }
 }
 
 section.home-hero {
@@ -76,16 +88,20 @@ section.home-hero {
 
   .inside-hero-first {
     max-width: 65%;
-    margin-top: 20vh;
+    margin-top: 22vh;
     position: relative;
     z-index: 5;
-    padding: 0 0 0 50px;
+    padding: 0 0 0 80px;
 
     h1 {
       font-size: 2.5rem;
       font-weight: 600;
       margin: 20px 0px;
+      font-family: "Josefin Sans";
+      font-weight: 400;
+      line-height: 1.5;
     }
+
     span.home-h1-2 {
       display: block;
       width: fit-content;
@@ -95,7 +111,7 @@ section.home-hero {
       &:after {
         content: "";
         position: absolute;
-        bottom: 10px;
+        bottom: 15%;
         left: 0;
         width: 100%;
         height: 35%;
@@ -106,12 +122,17 @@ section.home-hero {
         // transition: all 0.1s linear;
       }
     }
+
     p.home-first-p {
       max-width: 70%;
       word-wrap: break-word;
       width: max-content;
-      font-size: 18px;
+      // font-size: 18px;
+      font-family: "Josefin Sans";
+      font-weight: 200;
+      line-height: 1.3;
     }
+
     .home-avatar {
       padding-top: 30px;
       display: flex;
@@ -131,9 +152,12 @@ section.home-hero {
         -webkit-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
         -moz-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
         box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
+        font-family: "Josefin Sans";
+        font-weight: 300;
       }
     }
   }
+
   .inside-hero-second {
     position: relative;
     z-index: 108;
@@ -168,6 +192,9 @@ section.home-hero {
       align-items: center;
       flex-direction: column;
       justify-content: center;
+      -webkit-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
+      -moz-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
+      box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
       // padding-bottom: 20px;
 
       .hero-inside-second-img {
@@ -175,6 +202,7 @@ section.home-hero {
         background-image: linear-gradient(to top, #b1c7f1, #dce6f9);
         border-radius: 50px;
         align-self: flex-start;
+
         img {
           height: 100%;
           display: block;
@@ -185,28 +213,40 @@ section.home-hero {
           //   padding: 0;
         }
       }
+
       h3 {
         margin: 5px;
         padding: 5px;
+        font-family: "Josefin Sans";
+        font-weight: 300;
       }
+
       .hero-inside-second-btn-div {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: 80%;
-        max-width: 200px;
-        margin-bottom: 20px;
+        width: 90%;
+        max-width: 300px;
+        margin-bottom: 30px;
+
         button {
           // width: 100%;
-
+          cursor: auto;
           border: none;
           padding: 5px 25px;
+          width: 50%;
+          margin: 0 5px;
+          font-size: 70%;
+          font-family: "Josefin Sans";
+          font-weight: 200;
         }
+
         button.hero-inside-second-button-1 {
           background-color: black;
           border: 1px solid black;
           color: white;
         }
+
         button.hero-inside-second-button-2 {
           border: 1px solid #525252;
           background-color: #fff;
@@ -215,6 +255,7 @@ section.home-hero {
       }
     }
   }
+
   svg.wave-svg {
     position: absolute;
     z-index: 10;
@@ -244,22 +285,54 @@ section.home-second {
     top: 8%;
     opacity: 0.15;
   }
+
   img.abstarct-img-1 {
     // transform: rotate(360deg);
     left: -10%;
   }
+
   img.abstarct-img-2 {
     // transform: rotate(90deg);
     right: -10%;
   }
 
   h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 50px;
     margin: 0;
     padding-top: 200px;
+    font-family: "Josefin Sans";
+    font-weight: 400;
+    line-height: 1.5;
 
     text-align: center;
+  }
+
+  div.process-div {
+    width: 50%;
+    margin: 60px auto 20px;
+
+    ul {
+      list-style-position: outside;
+      // list-style: none;
+    }
+
+    li {
+      font-size: 1.5rem;
+      padding: 10px 0;
+      padding-left: 10px;
+      font-family: "Josefin Sans";
+      font-weight: 300;
+      line-height: 1.2;
+    }
+
+    // ul li::before {
+    //   content: "\2022";
+    //   color: #525252;
+    //   font-weight: bold;
+    //   display: inline-block;
+    //   width: 2em;
+    //   margin-left: -1em;
+    // }
   }
 
   span.home-h2-2 {
@@ -272,7 +345,7 @@ section.home-second {
     &:after {
       content: "";
       position: absolute;
-      bottom: 10px;
+      bottom: 15%;
       left: 0;
       width: 100%;
       height: 35%;
@@ -283,6 +356,7 @@ section.home-second {
       // transition: all 0.1s linear;
     }
   }
+
   .inside-second {
     width: 90%;
     // margin: 5% 8%;
@@ -303,55 +377,67 @@ section.home-second {
       // width: 30%;
       // max-width: 33.33%;
       position: relative;
+
       img.wallet-image {
         width: 100%;
         min-width: 100%;
       }
+
       .two {
         // position: relative;
         width: 100%;
+
         img {
           position: absolute;
           width: 18%;
         }
+
         img.bitcoin {
           top: 30%;
           left: 10%;
         }
+
         img.neocoin {
           bottom: 45%;
           left: 45%;
         }
+
         img.tethercoin {
           bottom: 35%;
           left: 25%;
         }
+
         img.ethereumcoin {
           bottom: 15%;
           left: 35%;
         }
+
         img.nft-1 {
           width: 20%;
           top: 25%;
           left: 28%;
         }
+
         img.nft-3 {
           width: 20%;
 
           top: 45%;
           left: 2%;
         }
+
         img.nft-2 {
           width: 20%;
           // top: 45%;
           bottom: 18%;
           left: 12%;
         }
+
         img.arrow {
           width: 40%;
           bottom: 30%;
           right: 15%;
         }
+
         // img.two-01,
         // img.two-02,
         // img.two-03,
@@ -367,6 +453,7 @@ section.home-second {
       }
     }
   }
+
   // svg {
   //   position: absolute;
 
@@ -384,94 +471,124 @@ section.home-second {
   //   // fill: linear-gradient(90deg, #dcd6fc, #9bb7ed);
   // }
 }
+
 @media only screen and (min-width: 1600px) {
   div.home-navbar {
     margin-top: 3.3rem;
 
     li {
       margin: 0 5px;
-      padding: 50px 30px 30px 30px;
-      font-size: 1.2rem;
+      padding: 40px 20px 20px 20px;
+      font-size: 1.1rem;
     }
   }
 
   section.home-second {
-    margin-top: calc(70vh - 100vh);
+    margin-top: calc(69vh - 100vh);
+
+    h1 {
+      padding-top: 400px;
+      font-size: 70px;
+    }
   }
 
   section.home-hero {
     min-height: 110vh;
+
     .inside-hero-first {
       h1.home-h1-1 {
         font-size: 70px;
       }
+
       p.home-first-p {
         font-size: 1.8rem;
         max-width: 60%;
       }
+
       .home-avatar {
         padding-top: 40px;
+
         .avatars {
           img {
             width: 64px;
           }
         }
+
         button.home-hero-button {
           padding: 10px 50px;
           font-size: 20px;
         }
       }
     }
+
     .inside-hero-second {
       min-height: 80vh;
       max-width: 600px;
-      padding: 120px 30px 50px 50px;
+      padding: 150px 80px 120px 80px;
     }
   }
 }
 
 @media only screen and (min-width: 1240px) and (max-width: 1599px) {
   div.home-navbar {
-    margin-top: 3rem;
+    margin-top: 4rem;
 
     li {
-      margin: 0 5px;
-      padding: 50px 30px 30px 30px;
-      font-size: 1.2rem;
+      margin: 0;
+      padding: 50px 20px 20px 20px;
+      font-size: 1rem;
+      // opacity: 0.8;
+    }
+
+    button {
+      // height: 50px;
+      padding: 10px 40px;
     }
   }
+
   section.home-hero {
-    min-height: 900px;
+    min-height: 1000px;
+
     .inside-hero-first {
       h1.home-h1-1 {
-        font-size: 60px;
+        font-size: 50px;
       }
+
       p.home-first-p {
         font-size: 1.5rem;
         max-width: 80%;
         word-wrap: break-word;
         width: max-content;
       }
+
       .home-avatar {
         padding-top: 20px;
+
         .avatars {
           img {
             width: 64px;
           }
         }
+
         button.home-hero-button {
           padding: 10px 50px;
           font-size: 20px;
         }
       }
     }
+
     .inside-hero-second {
       min-height: 80vh;
       max-width: 600px;
-      padding: 120px 30px 80px 80px;
+      padding: 150px 80px 80px 80px;
     }
   }
+
   section.home-second {
     margin-top: calc(45vh - 100vh);
+
+    h1.home-h2-1 {
+      padding-top: 300px;
+    }
   }
 }

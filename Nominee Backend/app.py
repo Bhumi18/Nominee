@@ -1,8 +1,10 @@
 from flask import Flask
+from flask_cors import CORS
 import os
 import smtplib
 import random
 from email.mime.multipart import MIMEMultipart
+from flask_ngrok import run_with_ngrok
 from email.mime.text import MIMEText
 from flask.globals import request, session
 from dotenv import load_dotenv
@@ -10,6 +12,9 @@ from web3 import Web3
 import json
 
 app = Flask(__name__)
+run_with_ngrok(app)
+cors = CORS(app)
+
 
 smtp = smtplib.SMTP("smtp.gmail.com", 587)
 load_dotenv()
@@ -17,12 +22,13 @@ load_dotenv()
 
 @app.route("/")
 def hello_world():
-    return "hi"
+    response_body = {"status": 200, "data": "Hi"}
+    return response_body
 
 # Contract setup
 alchemy_url = "https://polygon-mumbai.g.alchemy.com/v2/ALbcNieoFrIRYYNDrcr4dAASXUCZbm-i"
 web3 = Web3(Web3.HTTPProvider(alchemy_url))
-nominee_factory = "0x336041F8FdB4E2b148BE1C5C52344D4cC442f65a"
+nominee_factory = "0x23C82960b09F192A4c6056525829BE57422FaAE9"
 file = open("Nominee.json")
 abi = json.load(file)
 contract = web3.eth.contract(address=nominee_factory, abi=abi)
@@ -32,9 +38,10 @@ contract = web3.eth.contract(address=nominee_factory, abi=abi)
 # ---------------------------------------------------------------------------------------
 # Sending Verification otp using mail
 @app.route("/email_verification", methods=["POST"])
-def send_verification_mail():
+def email_verification():
     try:
         client_mail = request.json["email"]
+        user_address = request.json["user_address"]
 
         # Generate OTP
         otp = random.randint(1000, 9999)
@@ -43,8 +50,8 @@ def send_verification_mail():
             + "/verify?otp="
             + str(otp)
             + "&"
-            + "email="
-            + client_mail
+            + "address="
+            + user_address
         )
         # Invoking smtp to send mail
         smtp.starttls()
@@ -59,7 +66,7 @@ def send_verification_mail():
             Hi User,<br/>
             <p>Please click on the <a href='{hostname}'>link</a> to verify.</p><br/>
             Thank You,<br/>
-            Team DEHITAS
+            Team Inheritokens
         """
 
         part1 = MIMEText(html, "html")
@@ -68,11 +75,12 @@ def send_verification_mail():
 
         smtp.sendmail(os.environ.get("APP_MAIL"), client_mail, msg.as_string())
         smtp.close()
-        response_body = {"status": 200, "data": "sent"}
+        response_body = {"status": 200, "data": "sent", "otp":otp}
         return response_body
 
     except Exception as e:
         print(e)
+        print("error")
         return None
     
 # ---------------------------------------------------------------------------------------
@@ -108,29 +116,40 @@ def checkAddress():
 def verify():
     try:
         address = request.json["address"]
+        otp = request.json["otp"]
+        #get opt from contract
+        owner_details = contract.functions.getOwnerDetails(address).call()
+        contract_otp = (owner_details[5])
         # data to sign the transaction
-        chain_id = 80001
-        my_address = os.environ.get("ADDRESS")
-        private_key = os.environ.get("KEY")
-        nonce = web3.eth.getTransactionCount(my_address)
-        # contract function to verify the owner's email address
-        store_transaction = contract.functions.verifyOwner(address).buildTransaction(
-            {
-                "chainId": chain_id,
-                "from": my_address,
-                "nonce": nonce,
-                "gasPrice": web3.eth.gas_price,
-            }
-        )
-        signed_store_txn = web3.eth.account.sign_transaction(
-            store_transaction, private_key=private_key
-        )
-        send_store_tx = web3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
-        tx_receipt = web3.eth.wait_for_transaction_receipt(send_store_tx)
-        # print(tx_receipt)
-        print("done")
-        response_body = {"status": 200, "message": "verified"}                   
-        return response_body
+        if contract_otp==otp:
+            chain_id = 80001
+            my_address = os.environ.get("ADDRESS")
+            private_key = os.environ.get("KEY")
+            nonce = web3.eth.getTransactionCount(my_address)
+            # contract function to verify the owner's email address
+            store_transaction = contract.functions.verifyOwner(address).buildTransaction(
+                {
+                    "chainId": chain_id,
+                    "from": my_address,
+                    "nonce": nonce,
+                    "gasPrice": web3.eth.gas_price,
+                }
+            )
+            signed_store_txn = web3.eth.account.sign_transaction(
+                store_transaction, private_key=private_key
+            )
+            send_store_tx = web3.eth.send_raw_transaction(signed_store_txn.rawTransaction)
+            tx_receipt = web3.eth.wait_for_transaction_receipt(send_store_tx)
+            # print(tx_receipt)
+            print("done")
+            response_body = {"status": 200, "message": "verified"}                   
+            return response_body
+        else:
+            response_body = {"status": 500, "message": "otp is not same"}                   
+            return response_body
     except Exception as e:
         print(e)
         return None
+
+if __name__ == "__main__":
+  app.run()
