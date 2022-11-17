@@ -144,17 +144,57 @@ section.home-hero {
       }
 
       button.home-hero-button {
-        background-color: #f1fb7c;
+        // background-color: #f1fb7c;
+        background-color: #ffffff;
+        // color: #ffffff;
         padding: 10px 40px;
         margin-left: 40px;
-        border: 1px solid #f1fb7c;
+        border: 1px solid #ffffff;
+        // border-radius: 20px;
         font-size: 18px;
-        -webkit-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
-        -moz-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
-        box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
+        // -webkit-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
+        // -moz-box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
+        // box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.1);
         font-family: "Josefin Sans";
         font-weight: 300;
+        position: relative;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: -2px;
+          left: -2px;
+          background: linear-gradient(45deg,
+              #fb0094,
+              #0000ff,
+              #00ff00,
+              #ffff00,
+              #ff0000,
+              #fb0094,
+              #0000ff,
+              #00ff00,
+              #ffff00,
+              #ff0000);
+          background-size: 400%;
+          width: calc(100% + 4px);
+          height: calc(100% + 4px);
+          z-index: -1;
+          animation: animate 20s linear infinite;
+        }
+
+        &::after {
+          filter: blur(20px);
+        }
+
+        // min-width: 10vw;
+        svg {
+          margin: 0 auto;
+        }
       }
+
+
+
     }
   }
 
@@ -590,5 +630,19 @@ section.home-second {
     h1.home-h2-1 {
       padding-top: 300px;
     }
+  }
+}
+
+@keyframes animate {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 300% 0;
+  }
+
+  100% {
+    background-position: 0 0;
   }
 }

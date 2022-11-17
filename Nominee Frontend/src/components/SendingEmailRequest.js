@@ -30,7 +30,9 @@ function SendingEmailRequest() {
             <div className="sending-email-div">
               <h1 className="sending-email-h1">Confirm your email</h1>
               <p className="sending-email-p">We emailed a link to</p>
-              <span className="sending-email-span">{location.state.email}</span>
+
+              {/* <span className="sending-email-span">{location.state.email}</span> */}
+
               <p className="sending-email-p">
                 Click the link to verify your email
               </p>

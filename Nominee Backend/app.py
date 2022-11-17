@@ -28,7 +28,7 @@ def hello_world():
 # Contract setup
 alchemy_url = "https://polygon-mumbai.g.alchemy.com/v2/ALbcNieoFrIRYYNDrcr4dAASXUCZbm-i"
 web3 = Web3(Web3.HTTPProvider(alchemy_url))
-nominee_factory = "0x23C82960b09F192A4c6056525829BE57422FaAE9"
+nominee_factory = "0xaEF8eb4EDCB0177A5ef6a5e3f46E581a5908eef4"
 file = open("Nominee.json")
 abi = json.load(file)
 contract = web3.eth.contract(address=nominee_factory, abi=abi)
@@ -37,51 +37,51 @@ contract = web3.eth.contract(address=nominee_factory, abi=abi)
 # ---------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------
 # Sending Verification otp using mail
-@app.route("/email_verification", methods=["POST"])
-def email_verification():
-    try:
-        client_mail = request.json["email"]
-        user_address = request.json["user_address"]
+# @app.route("/email_verification", methods=["POST"])
+# def email_verification():
+    # try:
+    #     client_mail = request.json["email"]
+    #     user_address = request.json["user_address"]
 
-        # Generate OTP
-        otp = random.randint(1000, 9999)
-        hostname = (
-            os.environ.get("APP_URL")
-            + "/verify?otp="
-            + str(otp)
-            + "&"
-            + "address="
-            + user_address
-        )
-        # Invoking smtp to send mail
-        smtp.starttls()
-        smtp.login(os.environ.get("APP_MAIL"), os.environ.get("APP_PASSWORD"))
+    #     # Generate OTP
+    #     otp = random.randint(1000, 9999)
+    #     hostname = (
+    #         os.environ.get("APP_URL")
+    #         + "/verify?otp="
+    #         + str(otp)
+    #         + "&"
+    #         + "address="
+    #         + user_address
+    #     )
+    #     # Invoking smtp to send mail
+    #     smtp.starttls()
+    #     smtp.login(os.environ.get("APP_MAIL"), os.environ.get("APP_PASSWORD"))
 
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = "Dehitas email verification."
-        msg["From"] = os.environ.get("APP_MAIL")
-        msg["To"] = client_mail
+    #     msg = MIMEMultipart("alternative")
+    #     msg["Subject"] = "Inheritokens email verification."
+    #     msg["From"] = os.environ.get("APP_MAIL")
+    #     msg["To"] = client_mail
 
-        html = f"""
-            Hi User,<br/>
-            <p>Please click on the <a href='{hostname}'>link</a> to verify.</p><br/>
-            Thank You,<br/>
-            Team Inheritokens
-        """
+    #     html = f"""
+    #         Hi User,<br/>
+    #         <p>Please click on the <a href='{hostname}'>link</a> to verify.</p><br/>
+    #         Thank You,<br/>
+    #         Team Inheritokens
+    #     """
 
-        part1 = MIMEText(html, "html")
+    #     part1 = MIMEText(html, "html")
 
-        msg.attach(part1)
+    #     msg.attach(part1)
 
-        smtp.sendmail(os.environ.get("APP_MAIL"), client_mail, msg.as_string())
-        smtp.close()
-        response_body = {"status": 200, "data": "sent", "otp":otp}
-        return response_body
+    #     smtp.sendmail(os.environ.get("APP_MAIL"), client_mail, msg.as_string())
+    #     smtp.close()
+    #     response_body = {"status": 200, "data": "sent", "otp":otp}
+    #     return response_body
 
-    except Exception as e:
-        print(e)
-        print("error")
-        return None
+    # except Exception as e:
+    #     print(e)
+    #     print("error")
+    #     return None
     
 # ---------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------
@@ -93,16 +93,19 @@ def checkAddress():
         address = request.json["address"]
         # contract function to get all owner's address
         address_array = contract.functions.getOwners().call()
-        for i in range(len(address_array)):
-            # check if it is available and verification
-            if address == address_array[i]:
-                isVerified = contract.functions.checkVerification(address).call()
-                if(isVerified):
-                    response_body = {"status": 2, "message": "registered and verified"} 
+        if(address_array!=[]):
+            for i in range(len(address_array)):
+                # check if it is available and verification
+                if address == address_array[i]:
+                    isVerified = contract.functions.checkVerification(address).call()
+                    if(isVerified):
+                        response_body = {"status": 2, "message": "registered and verified"} 
+                    else:
+                        response_body = {"status": 1, "message": "registered but not verified"}      
                 else:
-                    response_body = {"status": 1, "message": "registered but not verified"}      
-            else:
-                response_body = {"status": 0, "message": " not registered"}                   
+                    response_body = {"status": 0, "message": " not registered"}                               
+        else:
+            response_body = {"status": 0, "message": " not registered"} 
         return response_body
     except Exception as e:
         print(e)

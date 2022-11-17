@@ -67,9 +67,11 @@
 
         h3 {
           cursor: default;
-          width: 80%;
-          max-width: 80%;
+          width: 100%;
+          max-width: 100%;
           text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
           text-align: center;
           margin: 10px auto;
           padding: 1rem 0;
@@ -81,7 +83,7 @@
         button.below-nft-button {
           align-self: center;
           // cursor: pointer;
-          margin: 10px 0px 20px;
+          margin: 10px;
           padding: 0.5rem 1rem;
           border-radius: 9999px;
           font-family: "Josefin Sans";
@@ -90,16 +92,12 @@
           border: 1px solid #dcd6fc;
           background: #dcd6fc;
           background-image: linear-gradient(to right, #9f8ff7 0%, #5a88e1 100%);
-          background-image: -moz-linear-gradient(
-            left,
-            #9f8ff7 0%,
-            #5a88e1 100%
-          );
-          background-image: -webkit-linear-gradient(
-            left,
-            #9f8ff7 0%,
-            #5a88e1 100%
-          );
+          background-image: -moz-linear-gradient(left,
+              #9f8ff7 0%,
+              #5a88e1 100%);
+          background-image: -webkit-linear-gradient(left,
+              #9f8ff7 0%,
+              #5a88e1 100%);
 
           &:hover {
             background-image: none;
@@ -111,4 +109,19 @@
       }
     }
   }
+}
+
+.all-nft-main-empty {
+  width: 100%;
+  margin: 50px 0;
+  height: 300px;
+  border-radius: 40px;
+  transition: box-shadow 0.25s ease-in-out;
+  -webkit-box-shadow: 0px 10px 25px 10px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 10px 25px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 25px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 40px;
 }

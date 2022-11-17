@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { ConnectKitButton } from "connectkit";
 
 import styled from "styled-components";
@@ -33,7 +33,7 @@ function ConnectWallet() {
     <ConnectKitButton.Custom>
       {({ isConnected, show, truncatedAddress, ensName }) => {
         return (
-          <StyledButton onClick={show}>
+          <StyledButton onClick={show} id="connect-wallet">
             {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
           </StyledButton>
         );
@@ -42,4 +42,4 @@ function ConnectWallet() {
   );
 }
 
-export default ConnectWallet;
+export default React.forwardRef(ConnectWallet);

@@ -12,6 +12,7 @@ import EditProfile from "./pages/EditProfile";
 /// wagmi start
 
 import {
+  Chain,
   WagmiConfig,
   createClient,
   defaultChains,
@@ -39,8 +40,27 @@ const { provider, webSocketProvider } = configureChains(defaultChains, [
 //   [chain.mainnet, chain.optimism],
 //   [publicProvider()]
 // );
+const customChain = {
+  id: 1029,
+  name: 'BitTorrent Chain Donau',
+  network: 'BitTorrent Chain Donau',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'BitTorrent Chain Donau',
+    symbol: 'BTT'
+  },
+  rpcUrls: {
+    default: 'https://pre-rpc.bittorrentchain.io/'
+  },
+  blockExplorers: {
+    default: {
+      name: 'BitTorrent Chain Donau', url: 'https://testscan.bt.io'
+    }
+  },
+  testnet: true
+}
 
-const chains = [chain.polygonMumbai];
+const chains = [chain.polygonMumbai, customChain];
 
 // const client = createClient(
 //   getDefaultClient({
@@ -106,7 +126,7 @@ function App() {
               <Route path="/verify/email" element={<SendingEmailRequest />} />
               <Route path="/email/verified/:slug" element={<EmailVerified />} />
 
-              <Route path="/*" element={<PageNotFound />} />
+              <Route path="/*" element={<Home />} />
             </Routes>
           </Router>
         </div>

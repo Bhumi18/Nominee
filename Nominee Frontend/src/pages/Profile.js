@@ -16,7 +16,8 @@ import { useReducer } from "react";
 import { useRef } from "react";
 import { ethers } from "ethers";
 import contract from "../artifacts/Main.json";
-export const CONTRACT_ADDRESS = "0x23C82960b09F192A4c6056525829BE57422FaAE9";
+export const CONTRACT_ADDRESS = "0xaEF8eb4EDCB0177A5ef6a5e3f46E581a5908eef4";
+export const BTTC_ADDRESS = "0xB987640A52415b64E2d19109E8f9d7a3492d5F54";
 
 function Profile() {
   const dataFetchedRef = useRef(false);
@@ -48,7 +49,7 @@ function Profile() {
         if (chainId === 80001) {
           const con = new ethers.Contract(CONTRACT_ADDRESS, contract, signer);
           const owner_details = await con.getOwnerDetails(address);
-          console.log(owner_details);
+          // console.log(owner_details);
           const url = "https://ipfs.io/ipfs/" + owner_details[2];
           data.push([
             owner_details[0],
@@ -57,10 +58,25 @@ function Profile() {
             owner_details[2],
           ]);
           setData(data);
-          console.log(data);
+          // console.log(data);
+          setLoading(false);
+        } else if (chainId === 1029) {
+          const con = new ethers.Contract(BTTC_ADDRESS, contract, signer);
+          const owner_details = await con.getOwnerDetails(address);
+          const url = "https://ipfs.io/ipfs/" + owner_details[2];
+          data.push([
+            owner_details[0],
+            owner_details[1],
+            url,
+            owner_details[2],
+          ]);
+          setData(data);
+          // console.log(data);
           setLoading(false);
         } else {
-          alert("Please connect to the mumbai test network!");
+          alert(
+            "Please connect to the mumbai test network or BTTC test network!"
+          );
         }
       }
     } catch (error) {
@@ -78,10 +94,10 @@ function Profile() {
   };
 
   const Nftpush = (props) => {
-    console.log(props);
+    // console.log(props);
     props.map((item) => {
       const nft = JSON.parse(item.metadata);
-      console.log(nft);
+      // console.log(nft);
       if (
         !nftData.find(
           (item) => nftData["block_number"] === item["block_number"]
@@ -89,11 +105,11 @@ function Profile() {
       )
         setNftData((prev) => [...prev, item]);
       // nftData.push([item]);
-      console.log(nftData);
+      // console.log(nftData);
       return nftData;
     });
 
-    console.log(nftData);
+    // console.log(nftData);
   };
   const fetchNfts = async () => {
     let url = "https://deep-index.moralis.io/api/v2/" + address + "/nft";
@@ -115,7 +131,7 @@ function Profile() {
     await axios
       .request(options)
       .then(function (response) {
-        console.log(response.data.result);
+        // console.log(response.data.result);
         // Nftpush(response.data.result);
         for (let i = 0; i < response.data.result.length; i++) {
           // const nft = JSON.parse(item.metadata);
@@ -131,9 +147,9 @@ function Profile() {
           // nftData.push([item]);
         }
         setNftData(nftData);
-        console.log(nftData);
+        // console.log(nftData);
         setShowAllNfts(true);
-        console.log("inside the api function");
+        // console.log("inside the api function");
       })
       .catch(function (error) {
         console.error(error);
